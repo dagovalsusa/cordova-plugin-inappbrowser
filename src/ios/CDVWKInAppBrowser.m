@@ -650,6 +650,27 @@ static CDVWKInAppBrowser* instance = nil;
     }
 }
 
+// DAGO EDIT //
+- (void)didLike:(WKWebView*)theWebView
+{
+    if (self.callbackId != nil) {
+        NSString* url = [theWebView.URL absoluteString];
+        if(url == nil){
+            if(self.inAppBrowserViewController.currentURL != nil){
+                url = [self.inAppBrowserViewController.currentURL absoluteString];
+            }else{
+                url = @"";
+            }
+        }
+        CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
+                                                      messageAsDictionary:@{@"type":@"message", @"url":url}];
+        [pluginResult setKeepCallback:[NSNumber numberWithBool:YES]];
+        
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:self.callbackId];
+    }
+}
+// END EDIT //
+
 - (void)webView:(WKWebView*)theWebView didFailNavigation:(NSError*)error
 {
     if (self.callbackId != nil) {
@@ -923,32 +944,6 @@ BOOL isExiting = FALSE;
     [self.view addSubview:self.spinner];
 }
 
-// DAGO EDIT //
-- (void)likeIt:(id)sender
-{
-    [self.navigationDelegate didLike:self.webView];
-}
-
-- (void)didLike:(WKWebView*)theWebView
-{
-    if (self.callbackId != nil) {
-        NSString* url = [theWebView.URL absoluteString];
-        if(url == nil){
-            if(self.inAppBrowserViewController.currentURL != nil){
-                url = [self.inAppBrowserViewController.currentURL absoluteString];
-            }else{
-                url = @"";
-            }
-        }
-        CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
-                                                      messageAsDictionary:@{@"type":@"share", @"url":url}];
-        [pluginResult setKeepCallback:[NSNumber numberWithBool:YES]];
-        
-        [self.commandDelegate sendPluginResult:pluginResult callbackId:self.callbackId];
-    }
-}
-// END EDIT //
-
 - (void) setWebViewFrame : (CGRect) frame {
     NSLog(@"Setting the WebView's frame to %@", NSStringFromCGRect(frame));
     [self.webView setFrame:frame];
@@ -1149,6 +1144,13 @@ BOOL isExiting = FALSE;
 {
     [self.webView goForward];
 }
+
+// DAGO EDIT //
+- (void)likeIt:(id)sender
+{
+    [self.navigationDelegate didLike:self.webView];
+}
+// END EDIT //
 
 - (void)viewWillAppear:(BOOL)animated
 {
