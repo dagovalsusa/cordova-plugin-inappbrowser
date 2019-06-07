@@ -882,25 +882,72 @@ BOOL isExiting = FALSE;
     if (_browserOptions.navigationbuttoncolor != nil) { // Set button color if user sets it in options
       self.backButton.tintColor = [self colorFromHexString:_browserOptions.navigationbuttoncolor];
     }
+    // DAGO EDIT //
+    NSString* likeString = NSLocalizedString(@"Share", nil); // create arrow from Unicode char
+    self.likeButton = [[UIBarButtonItem alloc] initWithTitle:likeString style:UIBarButtonItemStylePlain target:self action:@selector(likeIt:)];
+    self.likeButton.enabled = YES;
+    self.likeButton.imageInsets = UIEdgeInsetsZero;
+    if (_browserOptions.navigationbuttoncolor != nil) { // Set button color if user sets it in options
+        self.likeButton.tintColor = [self colorFromHexString:_browserOptions.navigationbuttoncolor];
+    }
 
     // Filter out Navigation Buttons if user requests so
-    if (_browserOptions.hidenavigationbuttons) {
+    // if (_browserOptions.hidenavigationbuttons) {
+    //     if (_browserOptions.lefttoright) {
+    //         [self.toolbar setItems:@[flexibleSpaceButton, self.closeButton]];
+    //     } else {
+    //         [self.toolbar setItems:@[self.closeButton, flexibleSpaceButton]];
+    //     }
+    // } else if (_browserOptions.lefttoright) {
+    //     [self.toolbar setItems:@[self.backButton, fixedSpaceButton, self.forwardButton, flexibleSpaceButton, self.closeButton]];
+    // } else {
+    //     [self.toolbar setItems:@[self.closeButton, flexibleSpaceButton, self.backButton, fixedSpaceButton, self.forwardButton]];
+    // }
+     if (_browserOptions.hidenavigationbuttons) {
         if (_browserOptions.lefttoright) {
-            [self.toolbar setItems:@[flexibleSpaceButton, self.closeButton]];
+            [self.toolbar setItems:@[self.likeButton, flexibleSpaceButton, self.closeButton]];
         } else {
-            [self.toolbar setItems:@[self.closeButton, flexibleSpaceButton]];
+            [self.toolbar setItems:@[self.closeButton, flexibleSpaceButton, self.likeButton]];
         }
     } else if (_browserOptions.lefttoright) {
-        [self.toolbar setItems:@[self.backButton, fixedSpaceButton, self.forwardButton, flexibleSpaceButton, self.closeButton]];
+        [self.toolbar setItems:@[self.backButton, fixedSpaceButton, self.forwardButton, flexibleSpaceButton, self.likeButton, flexibleSpaceButton, self.closeButton]];
     } else {
-        [self.toolbar setItems:@[self.closeButton, flexibleSpaceButton, self.backButton, fixedSpaceButton, self.forwardButton]];
+        [self.toolbar setItems:@[self.closeButton, flexibleSpaceButton, self.likeButton, flexibleSpaceButton, self.backButton, fixedSpaceButton, self.forwardButton]];
     }
-    
-    self.view.backgroundColor = [UIColor grayColor];
+
+    // self.view.backgroundColor = [UIColor grayColor];
+    self.view.backgroundColor = [UIColor colorWithRed:0.00 green:0.60 blue:0.80 alpha:1.0];
+    // END EDIT //
     [self.view addSubview:self.toolbar];
     [self.view addSubview:self.addressLabel];
     [self.view addSubview:self.spinner];
 }
+
+// DAGO EDIT //
+- (void)likeIt:(id)sender
+{
+    [self.navigationDelegate didLike:self.webView];
+}
+
+- (void)didLike:(WKWebView*)theWebView
+{
+    if (self.callbackId != nil) {
+        NSString* url = [theWebView.URL absoluteString];
+        if(url == nil){
+            if(self.inAppBrowserViewController.currentURL != nil){
+                url = [self.inAppBrowserViewController.currentURL absoluteString];
+            }else{
+                url = @"";
+            }
+        }
+        CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
+                                                      messageAsDictionary:@{@"type":@"share", @"url":url}];
+        [pluginResult setKeepCallback:[NSNumber numberWithBool:YES]];
+        
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:self.callbackId];
+    }
+}
+// END EDIT //
 
 - (void) setWebViewFrame : (CGRect) frame {
     NSLog(@"Setting the WebView's frame to %@", NSStringFromCGRect(frame));
