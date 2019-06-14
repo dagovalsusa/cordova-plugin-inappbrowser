@@ -549,6 +549,33 @@ public class InAppBrowser extends CordovaPlugin {
         });
     }
 
+    // DAGO EDIT
+
+    public void shareDialog() {
+        this.cordova.getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                final WebView childView = inAppWebView;
+                // The JS protects against multiple calls, so this should happen only when
+                // shareDialog() is called by other native code.
+                if (childView == null) {
+                    return;
+                }
+
+                try {
+                    JSONObject obj = new JSONObject();
+                    obj.put("type", "SHARE EVENT");
+                    obj.put("message", childView.getUrl());
+                    sendUpdate(obj, false);
+                } catch (JSONException ex) {
+                    LOG.d(LOG_TAG, "Should never happen");
+                }
+            }
+        });
+    }
+
+    // EDIT END
+
     /**
      * Checks to see if it is possible to go back one page in history, then does so.
      */
@@ -772,6 +799,66 @@ public class InAppBrowser extends CordovaPlugin {
                 return _close;
             }
 
+            // DAGO EDIT
+
+            private View createShareButton(int id){
+                View _share;
+                Resources activityRes = cordova.getActivity().getResources();
+
+                // if (closeButtonCaption != "") {
+                //     // Use TextView for text
+                //     TextView close = new TextView(cordova.getActivity());
+                //     close.setText(closeButtonCaption);
+                //     close.setTextSize(20);
+                //     if (closeButtonColor != "") close.setTextColor(android.graphics.Color.parseColor(closeButtonColor));
+                //     close.setGravity(android.view.Gravity.CENTER_VERTICAL);
+                //     close.setPadding(this.dpToPixels(10), 0, this.dpToPixels(10), 0);
+                //     _share = close;
+                // }
+                // else {
+                //     ImageButton close = new ImageButton(cordova.getActivity());
+                //     int closeResId = activityRes.getIdentifier("ic_action_remove", "drawable", cordova.getActivity().getPackageName());
+                //     Drawable closeIcon = activityRes.getDrawable(closeResId);
+                //     if (closeButtonColor != "") close.setColorFilter(android.graphics.Color.parseColor(closeButtonColor));
+                //     close.setImageDrawable(closeIcon);
+                //     close.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                //     if (Build.VERSION.SDK_INT >= 16)
+                //         close.getAdjustViewBounds();
+
+                //     _share = close;
+                // }
+
+                TextView share = new TextView(cordova.getActivity());
+                share.setText("Share");
+                share.setTextSize(20);
+                if (shareButtonColor != "") share.setTextColor(android.graphics.Color.parseColor(shareButtonColor));
+                share.setGravity(android.view.Gravity.CENTER_VERTICAL);
+                share.setPadding(this.dpToPixels(10), 0, this.dpToPixels(10), 0);
+                _share = share;
+
+                RelativeLayout.LayoutParams shareLayoutParams = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT);
+                if (leftToRight) shareLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+                else shareLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+                _share.setLayoutParams(shareLayoutParams);
+
+                if (Build.VERSION.SDK_INT >= 16)
+                    _share.setBackground(null);
+                else
+                    _share.setBackgroundDrawable(null);
+
+                _share.setContentDescription("Share Button");
+                _share.setId(Integer.valueOf(id));
+                _share.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View v) {
+                        shareDialog();
+                    }
+                });
+
+                return _share;
+            }
+
+            // EDIT END
+
             @SuppressLint("NewApi")
             public void run() {
 
@@ -896,6 +983,13 @@ public class InAppBrowser extends CordovaPlugin {
                 int closeButtonId = leftToRight ? 1 : 5;
                 View close = createCloseButton(closeButtonId);
                 toolbar.addView(close);
+
+                // DAGO EDIT
+
+                View share = createCloseButton(2);
+                toolbar.addView(share);
+
+                // EDIT END
 
                 // Footer
                 RelativeLayout footer = new RelativeLayout(cordova.getActivity());
