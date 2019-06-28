@@ -889,40 +889,42 @@ BOOL isExiting = FALSE;
     self.addressLabel.textAlignment = NSTextAlignmentLeft;
     self.addressLabel.textColor = [UIColor colorWithWhite:1.000 alpha:1.000];
     self.addressLabel.userInteractionEnabled = NO;
-    
-    NSString* frontArrowString = NSLocalizedString(@"►", nil); // create arrow from Unicode char
+    // DAGO EDIT //
+    NSString* frontArrowString = NSLocalizedString(@">", nil); // create arrow from Unicode char
     self.forwardButton = [[UIBarButtonItem alloc] initWithTitle:frontArrowString style:UIBarButtonItemStylePlain target:self action:@selector(goForward:)];
+//    self.self.forwardButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRedo target:self action:@selector(goForward:)];
     self.forwardButton.enabled = YES;
     self.forwardButton.imageInsets = UIEdgeInsetsZero;
     if (_browserOptions.navigationbuttoncolor != nil) { // Set button color if user sets it in options
       self.forwardButton.tintColor = [self colorFromHexString:_browserOptions.navigationbuttoncolor];
     }
 
-    NSString* backArrowString = NSLocalizedString(@"◄", nil); // create arrow from Unicode char
+    NSString* backArrowString = NSLocalizedString(@"<", nil); // create arrow from Unicode char
     self.backButton = [[UIBarButtonItem alloc] initWithTitle:backArrowString style:UIBarButtonItemStylePlain target:self action:@selector(goBack:)];
+//    self.backButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemUndo target:self action:@selector(goBack:)];
     self.backButton.enabled = YES;
     self.backButton.imageInsets = UIEdgeInsetsZero;
     if (_browserOptions.navigationbuttoncolor != nil) { // Set button color if user sets it in options
       self.backButton.tintColor = [self colorFromHexString:_browserOptions.navigationbuttoncolor];
     }
-    // DAGO EDIT //
-    NSString* likeString = NSLocalizedString(@"Share", nil); // create arrow from Unicode char
-    self.likeButton = [[UIBarButtonItem alloc] initWithTitle:likeString style:UIBarButtonItemStylePlain target:self action:@selector(likeIt:)];
-    self.likeButton.enabled = YES;
-    self.likeButton.imageInsets = UIEdgeInsetsZero;
+    
+    NSString* shareString = NSLocalizedString(@"Share", nil); // create arrow from Unicode char
+//    self.shareButton = [[UIBarButtonItem alloc] initWithTitle:shareString style:UIBarButtonItemStylePlain target:self action:@selector(likeIt:)];
+    UIImage *shareImage = [UIImage imageNamed:@"AppIcon"];
+    self.shareButton = [[UIBarButtonItem alloc] initWithImage:shareImage style:UIBarButtonItemStylePlain target:self action:@selector(likeIt:)];
+    self.shareButton.enabled = YES;
+//    self.shareButton.imageInsets = UIEdgeInsetsZero;
     if (_browserOptions.navigationbuttoncolor != nil) { // Set button color if user sets it in options
-        self.likeButton.tintColor = [self colorFromHexString:_browserOptions.navigationbuttoncolor];
+        self.shareButton.tintColor = [self colorFromHexString:_browserOptions.navigationbuttoncolor];
     }
     
-    NSString* addressString = NSLocalizedString(@"loading", nil); // create arrow from Unicode char
+    NSString* addressString = NSLocalizedString(@"loading...", nil); // create arrow from Unicode char
     self.addressButton = [[UIBarButtonItem alloc] initWithTitle:addressString style:UIBarButtonItemStylePlain target:self action:nil];
-    self.addressButton.enabled = YES;
-    self.addressButton.imageInsets = UIEdgeInsetsZero;
+    self.addressButton.enabled = NO;
+//    self.addressButton.imageInsets = UIEdgeInsetsZero;
     if (_browserOptions.navigationbuttoncolor != nil) { // Set button color if user sets it in options
         self.addressButton.tintColor = [self colorFromHexString:_browserOptions.navigationbuttoncolor];
     }
-    
-//    NSString* url = [self.webView.URL absoluteString];
     
 
     // Filter out Navigation Buttons if user requests so
@@ -939,16 +941,16 @@ BOOL isExiting = FALSE;
     // }
 //     if (_browserOptions.hidenavigationbuttons) {
 //        if (_browserOptions.lefttoright) {
-//            [self.toolbar setItems:@[self.likeButton, flexibleSpaceButton, self.closeButton]];
+//            [self.toolbar setItems:@[self.shareButton, flexibleSpaceButton, self.closeButton]];
 //        } else {
-//            [self.toolbar setItems:@[self.closeButton, flexibleSpaceButton, self.likeButton]];
+//            [self.toolbar setItems:@[self.closeButton, flexibleSpaceButton, self.shareButton]];
 //        }
 //    } else if (_browserOptions.lefttoright) {
-//        [self.toolbar setItems:@[self.backButton, fixedSpaceButton, self.forwardButton, flexibleSpaceButton, self.likeButton, flexibleSpaceButton, self.closeButton]];
+//        [self.toolbar setItems:@[self.backButton, fixedSpaceButton, self.forwardButton, flexibleSpaceButton, self.shareButton, flexibleSpaceButton, self.closeButton]];
 //    } else {
-//        [self.toolbar setItems:@[self.closeButton, self.backButton, self.addressButton, self.forwardButton, self.likeButton]];
+//        [self.toolbar setItems:@[self.closeButton, self.backButton, self.addressButton, self.forwardButton, self.shareButton]];
 //    }
-    [self.toolbar setItems:@[self.closeButton, fixedSpaceButton, self.backButton, flexibleSpaceButton, self.addressButton, flexibleSpaceButton, self.forwardButton, fixedSpaceButton, self.likeButton]];
+    [self.toolbar setItems:@[self.closeButton, fixedSpaceButton, self.backButton, flexibleSpaceButton, self.addressButton, flexibleSpaceButton, self.forwardButton, fixedSpaceButton, self.shareButton]];
 
     // self.view.backgroundColor = [UIColor grayColor];
     self.view.backgroundColor = [UIColor colorWithRed:0.96 green:0.96 blue:0.96 alpha:1.0];
@@ -970,7 +972,10 @@ BOOL isExiting = FALSE;
     // but, if you want to set this yourself, knock yourself out (we can't set the title for a system Done button, so we have to create a new one)
     self.closeButton = nil;
     // Initialize with title if title is set, otherwise the title will be 'Done' localized
-    self.closeButton = title != nil ? [[UIBarButtonItem alloc] initWithTitle:title style:UIBarButtonItemStyleBordered target:self action:@selector(close)] : [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(close)];
+    // DAGO EDIT //
+    //    self.closeButton = title != nil ? [[UIBarButtonItem alloc] initWithTitle:title style:UIBarButtonItemStyleBordered target:self action:@selector(close)] : [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(close)];
+    self.closeButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemStop target:self action:@selector(close)];
+    // END EDIT //
     self.closeButton.enabled = YES;
     // If color on closebutton is requested then initialize with that that color, otherwise use initialize with default
     self.closeButton.tintColor = colorString != nil ? [self colorFromHexString:colorString] : [UIColor colorWithRed:60.0 / 255.0 green:136.0 / 255.0 blue:230.0 / 255.0 alpha:1];
@@ -1249,11 +1254,14 @@ BOOL isExiting = FALSE;
     
     // DAGO EDIT //
     // self.addressLabel.text = [self.currentURL absoluteString];
-    self.addressButton.title =[self.currentURL absoluteString];
+    NSString *url = [self.currentURL absoluteString];
+    NSURLComponents *urlComponents = [NSURLComponents componentsWithString:url];
+//    self.addressButton.title = [url stringByReplacingOccurrencesOfString:@"https://" withString:@""];
+    self.addressButton.title = urlComponents.host;
     // END EDIT //
     self.backButton.enabled = theWebView.canGoBack;
     self.forwardButton.enabled = theWebView.canGoForward;
-    theWebView.scrollView.contentInset = UIEdgeInsetsZero;
+//    theWebView.scrollView.contentInset = UIEdgeInsetsZero;
     
     [self.spinner stopAnimating];
     
@@ -1287,6 +1295,10 @@ BOOL isExiting = FALSE;
     [self.spinner stopAnimating];
     
     self.addressLabel.text = NSLocalizedString(@"Load Error", nil);
+    // DAGO EDIT //
+    // self.addressLabel.text = [self.currentURL absoluteString];
+    self.addressButton.title = NSLocalizedString(@"Load Error", nil);
+    // END EDIT //
     
     [self.navigationDelegate webView:theWebView didFailNavigation:error];
 }
