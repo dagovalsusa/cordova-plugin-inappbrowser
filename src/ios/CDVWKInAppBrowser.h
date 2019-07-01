@@ -63,7 +63,6 @@
 @property (nonatomic, strong) IBOutlet UIBarButtonItem* forwardButton;
 // DAGO EDIT
 @property (nonatomic, strong) IBOutlet UIBarButtonItem* likeButton;
-@property (nonatomic, strong) IBOutlet UIBarButtonItem* addressButton;
 // END EDIT
 @property (nonatomic, strong) IBOutlet UIActivityIndicatorView* spinner;
 @property (nonatomic, strong) IBOutlet UIToolbar* toolbar;

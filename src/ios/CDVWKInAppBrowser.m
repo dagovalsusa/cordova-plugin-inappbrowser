@@ -826,7 +826,8 @@ BOOL isExiting = FALSE;
     self.spinner.userInteractionEnabled = NO;
     [self.spinner stopAnimating];
     
-    self.closeButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(close)];
+    self.closeButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemStop target:self action:@selector(close)];
+    self.closeButton.tintColor = [UIColor blackColor];
     self.closeButton.enabled = YES;
     
     UIBarButtonItem* flexibleSpaceButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
@@ -841,7 +842,7 @@ BOOL isExiting = FALSE;
     self.toolbar.alpha = 1.000;
     self.toolbar.autoresizesSubviews = YES;
     self.toolbar.autoresizingMask = toolbarIsAtBottom ? (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin) : UIViewAutoresizingFlexibleWidth;
-    self.toolbar.barStyle = UIBarStyleBlackOpaque;
+    self.toolbar.barStyle = UIBarStyleDefault;
     self.toolbar.clearsContextBeforeDrawing = NO;
     self.toolbar.clipsToBounds = NO;
     self.toolbar.contentMode = UIViewContentModeScaleToFill;
@@ -884,11 +885,11 @@ BOOL isExiting = FALSE;
     self.addressLabel.opaque = NO;
     self.addressLabel.shadowOffset = CGSizeMake(0.0, -1.0);
     self.addressLabel.text = NSLocalizedString(@"Loading...", nil);
-    self.addressLabel.textAlignment = NSTextAlignmentLeft;
-    self.addressLabel.textColor = [UIColor colorWithWhite:1.000 alpha:1.000];
+    self.addressLabel.textAlignment = NSTextAlignmentCenter;
+    self.addressLabel.textColor = [self colorFromHexString:_browserOptions.navigationbuttoncolor];
     self.addressLabel.userInteractionEnabled = NO;
     
-    NSString* frontArrowString = NSLocalizedString(@"►", nil); // create arrow from Unicode char
+    NSString* frontArrowString = NSLocalizedString(@"▶", nil); // create arrow from Unicode char
     self.forwardButton = [[UIBarButtonItem alloc] initWithTitle:frontArrowString style:UIBarButtonItemStylePlain target:self action:@selector(goForward:)];
     self.forwardButton.enabled = YES;
     self.forwardButton.imageInsets = UIEdgeInsetsZero;
@@ -896,7 +897,7 @@ BOOL isExiting = FALSE;
       self.forwardButton.tintColor = [self colorFromHexString:_browserOptions.navigationbuttoncolor];
     }
 
-    NSString* backArrowString = NSLocalizedString(@"◄", nil); // create arrow from Unicode char
+    NSString* backArrowString = NSLocalizedString(@"◀", nil); // create arrow from Unicode char
     self.backButton = [[UIBarButtonItem alloc] initWithTitle:backArrowString style:UIBarButtonItemStylePlain target:self action:@selector(goBack:)];
     self.backButton.enabled = YES;
     self.backButton.imageInsets = UIEdgeInsetsZero;
@@ -904,43 +905,23 @@ BOOL isExiting = FALSE;
       self.backButton.tintColor = [self colorFromHexString:_browserOptions.navigationbuttoncolor];
     }
     // DAGO EDIT //
-    NSString* likeString = NSLocalizedString(@"Share", nil); // create arrow from Unicode char
-    self.likeButton = [[UIBarButtonItem alloc] initWithTitle:likeString style:UIBarButtonItemStylePlain target:self action:@selector(likeIt:)];
-    self.likeButton.enabled = YES;
-    self.likeButton.imageInsets = UIEdgeInsetsZero;
+   
+    UIImage* aworld = [UIImage imageNamed:@"AppIcon"];
+    self.shareButton = [[UIBarButtonItem alloc] initWithImage:aworld style:UIBarButtonItemStylePlain target:self action:@selector(shareIt:)];
+    self.shareButton.enabled = YES;
+    self.shareButton.imageInsets = UIEdgeInsetsZero;
     if (_browserOptions.navigationbuttoncolor != nil) { // Set button color if user sets it in options
-        self.likeButton.tintColor = [self colorFromHexString:_browserOptions.navigationbuttoncolor];
+        self.shareButton.tintColor = [self colorFromHexString:_browserOptions.navigationbuttoncolor];
     }
+    
+    UIBarButtonItem *title = [[UIBarButtonItem alloc] initWithCustomView:self.addressLabel];
 
-    // Filter out Navigation Buttons if user requests so
-    // if (_browserOptions.hidenavigationbuttons) {
-    //     if (_browserOptions.lefttoright) {
-    //         [self.toolbar setItems:@[flexibleSpaceButton, self.closeButton]];
-    //     } else {
-    //         [self.toolbar setItems:@[self.closeButton, flexibleSpaceButton]];
-    //     }
-    // } else if (_browserOptions.lefttoright) {
-    //     [self.toolbar setItems:@[self.backButton, fixedSpaceButton, self.forwardButton, flexibleSpaceButton, self.closeButton]];
-    // } else {
-    //     [self.toolbar setItems:@[self.closeButton, flexibleSpaceButton, self.backButton, fixedSpaceButton, self.forwardButton]];
-    // }
-     if (_browserOptions.hidenavigationbuttons) {
-        if (_browserOptions.lefttoright) {
-            [self.toolbar setItems:@[self.likeButton, flexibleSpaceButton, self.closeButton]];
-        } else {
-            [self.toolbar setItems:@[self.closeButton, flexibleSpaceButton, self.likeButton]];
-        }
-    } else if (_browserOptions.lefttoright) {
-        [self.toolbar setItems:@[self.backButton, fixedSpaceButton, self.forwardButton, flexibleSpaceButton, self.likeButton, flexibleSpaceButton, self.closeButton]];
-    } else {
-        [self.toolbar setItems:@[self.closeButton, flexibleSpaceButton, self.likeButton, flexibleSpaceButton, self.backButton, fixedSpaceButton, self.forwardButton]];
-    }
+    [self.toolbar setItems:@[self.closeButton, fixedSpaceButton, self.backButton, flexibleSpaceButton, title, flexibleSpaceButton, self.forwardButton, fixedSpaceButton, self.shareButton]];
 
-    // self.view.backgroundColor = [UIColor grayColor];
-    self.view.backgroundColor = [UIColor colorWithRed:0.00 green:0.60 blue:0.80 alpha:1.0];
+    self.view.backgroundColor = [UIColor colorWithRed:0.96 green:0.96 blue:0.96 alpha:1.0];
     // END EDIT //
     [self.view addSubview:self.toolbar];
-    [self.view addSubview:self.addressLabel];
+//    [self.view addSubview:self.addressLabel];
     [self.view addSubview:self.spinner];
 }
 
@@ -959,7 +940,7 @@ BOOL isExiting = FALSE;
     self.closeButton.enabled = YES;
     // If color on closebutton is requested then initialize with that that color, otherwise use initialize with default
     self.closeButton.tintColor = colorString != nil ? [self colorFromHexString:colorString] : [UIColor colorWithRed:60.0 / 255.0 green:136.0 / 255.0 blue:230.0 / 255.0 alpha:1];
-    
+
     NSMutableArray* items = [self.toolbar.items mutableCopy];
     [items replaceObjectAtIndex:buttonIndex withObject:self.closeButton];
     [self.toolbar setItems:items];
@@ -1146,7 +1127,7 @@ BOOL isExiting = FALSE;
 }
 
 // DAGO EDIT //
-- (void)likeIt:(id)sender
+- (void)shareIt:(id)sender
 {
     [self.navigationDelegate didLike:self.webView];
 }
@@ -1231,8 +1212,8 @@ BOOL isExiting = FALSE;
 - (void)webView:(WKWebView *)theWebView didFinishNavigation:(WKNavigation *)navigation
 {
     // update url, stop spinner, update back/forward
-    
-    self.addressLabel.text = [self.currentURL absoluteString];
+    NSURLComponents *urlComponents = [NSURLComponents componentsWithString:[self.currentURL absoluteString]];
+    self.addressLabel.text = urlComponents.host;
     self.backButton.enabled = theWebView.canGoBack;
     self.forwardButton.enabled = theWebView.canGoForward;
     theWebView.scrollView.contentInset = UIEdgeInsetsZero;
