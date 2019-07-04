@@ -968,7 +968,7 @@ public class InAppBrowser extends CordovaPlugin {
                 share.setLayoutParams(shareLayoutParams);
                 share.setContentDescription("Share Button");
                 share.setId(Integer.valueOf(7));
-                int shareResId = activityRes.getIdentifier("logo", "drawable", cordova.getActivity().getPackageName());
+                int shareResId = activityRes.getIdentifier("ic_share", "drawable", cordova.getActivity().getPackageName());
                 Drawable shareIcon = activityRes.getDrawable(shareResId);
                 if (navigationButtonColor != "") share.setColorFilter(android.graphics.Color.parseColor(navigationButtonColor));
                 if (Build.VERSION.SDK_INT >= 16)
