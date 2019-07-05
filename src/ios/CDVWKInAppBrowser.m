@@ -906,7 +906,8 @@ BOOL isExiting = FALSE;
     }
     // DAGO EDIT //
    
-    UIImage* aworld = [UIImage imageNamed:@"AppIcon"];
+    // UIImage* aworld = [UIImage imageNamed:@"AppIcon"];
+    UIImage* aworld = [UIImage imageNamed:@"ic_share"];
     self.shareButton = [[UIBarButtonItem alloc] initWithImage:aworld style:UIBarButtonItemStylePlain target:self action:@selector(shareIt:)];
     self.shareButton.enabled = YES;
     self.shareButton.imageInsets = UIEdgeInsetsZero;
