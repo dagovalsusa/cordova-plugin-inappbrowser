@@ -856,6 +856,7 @@ public class InAppBrowser extends CordovaPlugin {
                 close.setLayoutParams(closeLayoutParams);
                 close.setContentDescription("Close Button");
                 close.setId(Integer.valueOf(2));
+                close.setPaddingLeft('5px');
                 int closeResId = activityRes.getIdentifier("ic_action_remove", "drawable", cordova.getActivity().getPackageName());
                 Drawable closeIcon = activityRes.getDrawable(closeResId);
                 if (navigationButtonColor != "") close.setColorFilter(android.graphics.Color.parseColor(navigationButtonColor));
@@ -968,6 +969,7 @@ public class InAppBrowser extends CordovaPlugin {
                 share.setLayoutParams(shareLayoutParams);
                 share.setContentDescription("Share Button");
                 share.setId(Integer.valueOf(7));
+                share.setPaddingRight('5px');
                 int shareResId = activityRes.getIdentifier("ic_share", "drawable", cordova.getActivity().getPackageName());
                 Drawable shareIcon = activityRes.getDrawable(shareResId);
                 if (navigationButtonColor != "") share.setColorFilter(android.graphics.Color.parseColor(navigationButtonColor));
