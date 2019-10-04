@@ -840,7 +840,11 @@ BOOL isExiting = FALSE;
     [self.spinner stopAnimating];
     
     self.closeButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemStop target:self action:@selector(close)];
-    self.closeButton.tintColor = [UIColor blackColor];
+    if (_browserOptions.navigationbuttoncolor != nil) { // Set button color if user sets it in options
+        self.closeButton.tintColor = [self colorFromHexString:_browserOptions.navigationbuttoncolor];
+    } else {
+        self.closeButton.tintColor = [UIColor blackColor];
+    }
     self.closeButton.enabled = YES;
     
     UIBarButtonItem* flexibleSpaceButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
@@ -920,13 +924,21 @@ BOOL isExiting = FALSE;
     // DAGO EDIT //
    
     // UIImage* aworld = [UIImage imageNamed:@"AppIcon"];
-    UIImage* aworld = [UIImage imageNamed:@"ic_share"];
-    self.shareButton = [[UIBarButtonItem alloc] initWithImage:aworld style:UIBarButtonItemStylePlain target:self action:@selector(shareIt:)];
-    self.shareButton.enabled = YES;
-    self.shareButton.imageInsets = UIEdgeInsetsZero;
+    // UIImage* aworld = [UIImage imageNamed:@"ic_share"];
+    // self.shareButton = [[UIBarButtonItem alloc] initWithImage:aworld style:UIBarButtonItemStylePlain target:self action:@selector(shareIt:)];
+    // self.shareButton.enabled = YES;
+    // self.shareButton.imageInsets = UIEdgeInsetsZero;
+    // if (_browserOptions.navigationbuttoncolor != nil) { // Set button color if user sets it in options
+    //     self.shareButton.tintColor = [self colorFromHexString:_browserOptions.navigationbuttoncolor];
+    // }
+
+    self.shareButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(close)];
     if (_browserOptions.navigationbuttoncolor != nil) { // Set button color if user sets it in options
         self.shareButton.tintColor = [self colorFromHexString:_browserOptions.navigationbuttoncolor];
+    } else {
+        self.shareButton.tintColor = [UIColor blackColor];
     }
+    self.shareButton.enabled = YES;
     
     UIBarButtonItem *title = [[UIBarButtonItem alloc] initWithCustomView:self.addressLabel];
 
@@ -955,9 +967,9 @@ BOOL isExiting = FALSE;
     // If color on closebutton is requested then initialize with that that color, otherwise use initialize with default
     self.closeButton.tintColor = colorString != nil ? [self colorFromHexString:colorString] : [UIColor colorWithRed:60.0 / 255.0 green:136.0 / 255.0 blue:230.0 / 255.0 alpha:1];
 
-    NSMutableArray* items = [self.toolbar.items mutableCopy];
-    [items replaceObjectAtIndex:buttonIndex withObject:self.closeButton];
-    [self.toolbar setItems:items];
+    // NSMutableArray* items = [self.toolbar.items mutableCopy];
+    // [items replaceObjectAtIndex:buttonIndex withObject:self.closeButton];
+    // [self.toolbar setItems:items];
 }
 
 - (void)showLocationBar:(BOOL)show
