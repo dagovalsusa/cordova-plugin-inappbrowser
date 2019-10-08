@@ -37,6 +37,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -140,7 +141,7 @@ public class InAppBrowser extends CordovaPlugin {
     private String closeButtonCaption = "";
     private String closeButtonColor = "";
     private boolean leftToRight = false;
-    private int toolbarColor = android.graphics.Color.LTGRAY;
+    private int toolbarColor = android.graphics.Color.WHITE;
     private boolean hideNavigationButtons = false;
     private String navigationButtonColor = "";
     private boolean hideUrlBar = false;
@@ -904,13 +905,14 @@ public class InAppBrowser extends CordovaPlugin {
                     }
                 });
 
+
                 // Edit Text Box
                 edittext = new EditText(cordova.getActivity());
                 RelativeLayout.LayoutParams textLayoutParams = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
                 textLayoutParams.addRule(RelativeLayout.RIGHT_OF, 1);
                 textLayoutParams.addRule(RelativeLayout.LEFT_OF, 5);
                 edittext.setLayoutParams(textLayoutParams);
-                edittext.setId(Integer.valueOf(4));
+                edittext.setId(Integer.valueOf(14));
                 edittext.setSingleLine(true);
                 edittext.setText(url);
                 edittext.setInputType(InputType.TYPE_TEXT_VARIATION_URI);
@@ -926,6 +928,21 @@ public class InAppBrowser extends CordovaPlugin {
                         return false;
                     }
                 });
+
+
+                TextView urltext = new TextView(cordova.getActivity());
+                RelativeLayout.LayoutParams urltextLayoutParams = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+                urltextLayoutParams.addRule(RelativeLayout.RIGHT_OF, 1);
+                urltextLayoutParams.addRule(RelativeLayout.LEFT_OF, 5);
+                urltext.setLayoutParams(urltextLayoutParams);
+                urltext.setId(Integer.valueOf(4));
+                urltext.setSingleLine(true);
+                urltext.setHeight(40);
+                urltext.setPadding(0, 25, 0, 0);
+                urltext.setLineHeight(40);
+                urltext.setEllipsize(TextUtils.TruncateAt.END);
+                urltext.setText(url);
+                urltext.setTextColor(Color.BLACK);
 
                 // right container
                 RelativeLayout rightContainer = new RelativeLayout(cordova.getActivity());
@@ -1000,7 +1017,7 @@ public class InAppBrowser extends CordovaPlugin {
 
                 // Add the views to our toolbar if they haven't been disabled
                 toolbar.addView(leftContainer);
-                toolbar.addView(edittext);
+                toolbar.addView(urltext);
                 toolbar.addView(rightContainer);
 
                 main.addView(toolbar);
