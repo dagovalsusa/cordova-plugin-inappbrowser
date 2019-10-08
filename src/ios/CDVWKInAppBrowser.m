@@ -853,7 +853,6 @@ BOOL isExiting = FALSE;
     fixedSpaceButton.width = 20;
     
     float toolbarY = toolbarIsAtBottom ? self.view.bounds.size.height - TOOLBAR_HEIGHT : 0.0;
-    NSLog(@"%f", toolbarY);
     CGRect toolbarFrame = CGRectMake(0.0, toolbarY, self.view.bounds.size.width, TOOLBAR_HEIGHT);
     
     self.toolbar = [[UIToolbar alloc] initWithFrame:toolbarFrame];
@@ -1199,7 +1198,12 @@ BOOL isExiting = FALSE;
 
 - (void) rePositionViews {
     if ([_browserOptions.toolbarposition isEqualToString:kInAppBrowserToolbarBarPositionTop]) {
-        [self.webView setFrame:CGRectMake(self.webView.frame.origin.x, TOOLBAR_HEIGHT * 2, self.webView.frame.size.width, self.webView.frame.size.height)];
+        CGFloat topPadding = 0;
+        if (@available(iOS 11.0, *)) {
+            UIWindow *window = UIApplication.sharedApplication.keyWindow;
+            topPadding = window.safeAreaInsets.top;
+        }
+        [self.webView setFrame:CGRectMake(self.webView.frame.origin.x, TOOLBAR_HEIGHT + topPadding, self.webView.frame.size.width, self.webView.frame.size.height)];
         [self.toolbar setFrame:CGRectMake(self.toolbar.frame.origin.x, [self getStatusBarOffset], self.toolbar.frame.size.width, self.toolbar.frame.size.height)];
     }
 }
