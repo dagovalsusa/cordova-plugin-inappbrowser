@@ -1199,12 +1199,7 @@ BOOL isExiting = FALSE;
 
 - (void) rePositionViews {
     if ([_browserOptions.toolbarposition isEqualToString:kInAppBrowserToolbarBarPositionTop]) {
-        CGFloat topPadding = 0;
-        if (@available(iOS 11.0, *)) {
-            UIWindow *window = UIApplication.sharedApplication.keyWindow;
-            topPadding = window.safeAreaInsets.top;
-        }
-        [self.webView setFrame:CGRectMake(self.webView.frame.origin.x, TOOLBAR_HEIGHT + topPadding, self.webView.frame.size.width, self.webView.frame.size.height)];
+        [self.webView setFrame:CGRectMake(self.webView.frame.origin.x, TOOLBAR_HEIGHT * 2, self.webView.frame.size.width, self.webView.frame.size.height)];
         [self.toolbar setFrame:CGRectMake(self.toolbar.frame.origin.x, [self getStatusBarOffset], self.toolbar.frame.size.width, self.toolbar.frame.size.height)];
     }
 }
