@@ -933,7 +933,7 @@ BOOL isExiting = FALSE;
     //     self.shareButton.tintColor = [self colorFromHexString:_browserOptions.navigationbuttoncolor];
     // }
 
-    self.shareButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(close)];
+    self.shareButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(shareIt:)];
     if (_browserOptions.navigationbuttoncolor != nil) { // Set button color if user sets it in options
         self.shareButton.tintColor = [self colorFromHexString:_browserOptions.navigationbuttoncolor];
     } else {
