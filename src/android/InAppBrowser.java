@@ -939,7 +939,7 @@ public class InAppBrowser extends CordovaPlugin {
                 urltext.setSingleLine(true);
                 urltext.setHeight(40);
                 urltext.setPadding(0, 25, 0, 0);
-                urltext.setLineHeight(40);
+                // urltext.setLineHeight(40);
                 urltext.setEllipsize(TextUtils.TruncateAt.END);
                 urltext.setText(url);
                 urltext.setTextColor(Color.BLACK);
